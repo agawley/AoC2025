@@ -1,4 +1,4 @@
-with open("test.txt") as file:
+with open("data.txt") as file:
     batteries = [line.strip() for line in file.readlines()]
 
 
@@ -22,13 +22,16 @@ def part1():
 def part2():
     total = 0
     for battery in batteries:
+        print(battery)
         max_digits = []
         last_pos = 0
         for n in range(12):
-            max_digit = max(battery[last_pos : len(battery) - (11 - n)])
-            last_pos = battery.index(max_digit) + 1
+            remaining_battery = battery[last_pos:]
+            max_digit = max(remaining_battery[: len(remaining_battery) - (11 - n)])
+            last_pos = remaining_battery.index(max_digit) + 1 + last_pos
             max_digits.append(max_digit)
             total += int(max_digit) * (10 ** (11 - n))
+        print("".join(max_digits))
     return total
 
 
