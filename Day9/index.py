@@ -37,9 +37,7 @@ def part2():
         for other_tile in tiles:
             if tile == other_tile:
                 continue
-            if not check_rectangle_within_boundary(
-                get_rectangle_perimeter(tile, other_tile), boundary
-            ):
+            if not check_rectangle_within_boundary(tile, other_tile, boundary):
                 continue
             area = (abs(x_coords[tile[0]] - x_coords[other_tile[0]]) + 1) * (
                 abs(y_coords[tile[1]] - y_coords[other_tile[1]]) + 1
@@ -47,21 +45,6 @@ def part2():
             if area > max_rect_area:
                 max_rect_area = area
     print(max_rect_area)
-
-
-def get_rectangle_perimeter(start, end):
-    line_points = {"horizontal": set(), "vertical": set()}
-    x_start = min(start[0], end[0])
-    x_end = max(start[0], end[0])
-    y_start = min(start[1], end[1])
-    y_end = max(start[1], end[1])
-    for x in range(x_start + 1, x_end):
-        line_points["horizontal"].add((x, y_start))
-        line_points["horizontal"].add((x, y_end))
-    for y in range(y_start + 1, y_end):
-        line_points["vertical"].add((x_start, y))
-        line_points["vertical"].add((x_end, y))
-    return line_points
 
 
 def get_boundary(tiles):
@@ -83,14 +66,34 @@ def get_boundary(tiles):
     return boundary_lines
 
 
-def check_rectangle_within_boundary(rectangle, boundary):
+def check_rectangle_within_boundary(start, end, boundary):
+    x_start = min(start[0], end[0])
+    x_end = max(start[0], end[0])
+    y_start = min(start[1], end[1])
+    y_end = max(start[1], end[1])
+
     # horizontal lines
-    for point in rectangle["horizontal"]:
-        if point in boundary["vertical"]:
+    for x in range(x_start + 1, x_end):
+        # Check bottom edge: if boundary enters upwards
+        if (x, y_start) in boundary["vertical"]:
             return False
+        # Check top edge: if boundary enters downwards
+        if (x, y_end) in boundary["vertical"] and (x, y_end - 1) in boundary[
+            "vertical"
+        ]:
+            return False
+
     # vertical lines
-    for point in rectangle["vertical"]:
-        if point in boundary["horizontal"]:
+    for y in range(y_start + 1, y_end):
+        # Check left edge: if boundary enters rightwards
+        if (x_start, y) in boundary["horizontal"] and (x_start + 1, y) in boundary[
+            "horizontal"
+        ]:
+            return False
+        # Check right edge: if boundary enters leftwards
+        if (x_end, y) in boundary["horizontal"] and (x_end - 1, y) in boundary[
+            "horizontal"
+        ]:
             return False
     return True
 
