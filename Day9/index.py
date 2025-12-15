@@ -99,3 +99,25 @@ def check_rectangle_within_boundary(start, end, boundary):
 
 
 part2()
+
+
+# Note that part2_uncompressed doesn't work
+def part2_uncompressed():
+    max_rect_area = 0
+    tiles = red_tiles
+    boundary = get_boundary(tiles)
+    for tile in tiles:
+        for other_tile in tiles:
+            if tile == other_tile:
+                continue
+            if not check_rectangle_within_boundary(tile, other_tile, boundary):
+                continue
+            area = (abs(tile[0] - other_tile[0]) + 1) * (
+                abs(tile[1] - other_tile[1]) + 1
+            )
+            if area > max_rect_area:
+                max_rect_area = area
+    print(max_rect_area)
+
+
+part2_uncompressed()
