@@ -1,7 +1,7 @@
 from functools import reduce
 from itertools import combinations
 
-with open("data.txt") as f:
+with open("test.txt") as f:
     input = [line.split() for line in f.read().splitlines()]
 
 
@@ -40,6 +40,20 @@ def check_machine(machine):
             if reduce(lambda x, y: x ^ y, combo, 0) == target:
                 print("Found combo:", combo)
                 return len(combo)
+    return 0
 
 
-part1()
+# part1()
+
+
+def part2():
+    for I, L in enumerate(input, 1):
+        _, *coeffs, goal = L
+        goal = tuple(int(i) for i in goal[1:-1].split(","))
+        coeffs = [[int(i) for i in r[1:-1].split(",")] for r in coeffs]
+        coeffs = [tuple(int(i in r) for i in range(len(goal))) for r in coeffs]
+        print(coeffs)
+
+def get 
+
+part2()
